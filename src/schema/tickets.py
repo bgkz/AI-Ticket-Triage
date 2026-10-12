@@ -11,7 +11,9 @@ class TicketRequest(BaseModel):
 class InvalidTicketResponse(BaseModel):
     category: Literal["invalid"]
     reason: str = Field(
-        description="Begründung warum das Ticket als invalid eingestuft wurde"
+        min_length=10,
+        max_length=200,
+        description="Begründung warum das Ticket als invalid eingestuft wurde",
     )
 
 

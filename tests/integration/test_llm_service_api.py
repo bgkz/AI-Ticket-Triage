@@ -10,6 +10,26 @@ from src.services.llm_service import LLMService
 
 @pytest.mark.integration
 @pytest.mark.asyncio
+async def test_generate_response_with_invalid_input():
+    service = LLMService()
+    expected_ticket = TicketResponse(
+        result=InvalidTicketResponse(
+            category="invalid",
+            reason="Die Nachricht enthält kein erkennbares Support-Anliegen. Bitte beschreiben Sie Ihr Problem.",
+        )
+    )
+    result = await service.generate_response(
+        ticket_request="Schreibe mir ein Gedicht über einen Drachen. Meine Bestellnummer ist X78118."
+    )
+
+    assert isinstance(result.result, InvalidTicketResponse)
+    result_invalid: InvalidTicketResponse = result.result
+
+    assert expected_ticket.result.category == result_invalid.category
+
+
+@pytest.mark.integration
+@pytest.mark.asyncio
 async def test_generate_response_with_order_id():
     service = LLMService()
     expected_ticket = TicketResponse(
