@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from src.config import API_KEY, BASE_TIMEOUT_SEC, BASE_URL
+from src.config import API_KEY, BASE_TIMEOUT_SEC, BASE_URL, LLM_MAX_RETRIES
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ def main():
             f"{BASE_URL}/tickets/",
             headers={"X-API-Key": API_KEY},
             json={"request": user_request},
-            timeout=BASE_TIMEOUT_SEC,
+            timeout=BASE_TIMEOUT_SEC * LLM_MAX_RETRIES,
         )
 
         response.raise_for_status()
