@@ -1,0 +1,2 @@
+class MissingStructuredResponseError(RuntimeError):
+    pass

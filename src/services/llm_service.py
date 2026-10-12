@@ -2,6 +2,7 @@ import openai
 
 from src.config import BASE_TIMEOUT_SEC, LLM_MAX_RETRIES, OPENAI_API_KEY
 from src.schema.tickets import TicketResponse
+from src.services.exceptions import MissingStructuredResponseError
 from src.services.llm_settings import CREATE_TICKET_INSTRUCTIONS, MODEL
 
 
@@ -21,4 +22,6 @@ class LLMService:
             text_format=TicketResponse,
         )
 
+        if response.output_parsed is None:
+            raise MissingStructuredResponseError("Keine strukturierte Antwort erhalten")
         return response.output_parsed

@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.schema.tickets import TicketRequest
 from src.security.api_key import verify_api_key
+from src.services.exceptions import MissingStructuredResponseError
 from src.services.llm_service import LLMService
 
 router = APIRouter(
@@ -28,4 +29,10 @@ async def create_ticket(ticket_request: TicketRequest):
         raise HTTPException(
             status_code=status.HTTP_504_GATEWAY_TIMEOUT,
             detail="Zeitüberschreitung beim KI-Dienst. Bitte versuchen Sie es später erneut.",
+        ) from error
+
+    except MissingStructuredResponseError as error:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Der KI-Dienst hat keine gültige Antwort geliefert. Bitte versuchen Sie es erneut.",
         ) from error
