@@ -23,3 +23,9 @@ async def create_ticket(ticket_request: TicketRequest):
             status_code=500,
             detail="Authentifizierung beim KI-Dienst fehlgeschlagen",
         ) from error
+
+    except openai.APITimeoutError as error:
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="Zeitüberschreitung beim KI-Dienst. Bitte versuchen Sie es später erneut.",
+        ) from error
